@@ -1,7 +1,23 @@
-// Verificar se o usuário fez o login
-if (location.pathname.endsWith("login.html")) {
+// LOGIN
+if (location.pathname.endsWith("index.html")) {
+  document.getElementById("login-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+
+    if (username === "admin" && senha === "admin") {
+      localStorage.setItem("logado", "true");
+      location.href = "agenda.html"; // redireciona para a agenda
+    } else {
+      alert("Usuário ou senha incorretos.");
+    }
+  });
+}
+
+// Verificar se o usuário fez o login (na agenda.html)
+if (location.pathname.endsWith("agenda.html")) {
   if (localStorage.getItem("logado") !== "true") {
-    location.href = "index.html";
+    location.href = "index.html"; // redireciona de volta para login
   }
 }
 
@@ -11,9 +27,7 @@ let indice = 0;
 
 // Salvar contatos no localStorage
 function salvarContatos() {
-
   localStorage.setItem("contatos", JSON.stringify(contatos));
-
 }
 
 // Carregar contatos do localStorage
@@ -41,24 +55,8 @@ function exibir() {
   document.getElementById("telefone").value = c.telefone;
 }
 
-// LOGIN
-if (location.pathname.endsWith("login.html")) {
-  document.getElementById("login-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    const username = document.getElementById("username").value.trim();
-    const senha = document.getElementById("senha").value.trim();
-
-    if (username === "admin" && senha === "admin") {
-      localStorage.setItem("logado", "true");
-      location.href = "login.html";
-    } else {
-      alert("Usuário ou senha incorretos.");
-    }
-  });
-}
-
-// INDEX
-if (location.pathname.endsWith("login.html")) {
+// AGENDA
+if (location.pathname.endsWith("agenda.html")) {
   carregarContatos();
   exibir();
 
@@ -72,8 +70,7 @@ if (location.pathname.endsWith("login.html")) {
     contatos.push(contato);
     indice = contatos.length - 1;
     salvarContatos();
-    const f= document.getElementById("form1");
-    f.reset()
+    document.getElementById("form1").reset();
   });
 
   document.getElementById("editar").addEventListener("click", () => {
@@ -116,5 +113,11 @@ if (location.pathname.endsWith("login.html")) {
     if (contatos.length === 0) return;
     indice = contatos.length - 1;
     exibir();
+  });
+
+  // Botão "Sair" (logout)
+  document.getElementById("sair").addEventListener("click", () => {
+    localStorage.removeItem("logado");
+    location.href = "index.html";
   });
 }
